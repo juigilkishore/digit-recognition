@@ -22,11 +22,11 @@
 ## Author: juigilkishore <juigilkishore@juigilkishore-Studio-1555>
 ## Created: 2016-04-24
 
-function [theta, cost] = gradientDescent (y, X, M, theta, alpha, numIterations)
+function [theta, cost] = gradientDescent (y, X, M, theta, alpha, numIterations, lambda)
   cost_previous = 0;
-  cost_threshold = 1E-5;
+  cost_threshold = 1E-6;
   for iter = 1:numIterations
-    [J, gradient] = computeCostGradient(y, X, theta, M);
+    [J, gradient] = computeCostGradient(y, X, theta, M, lambda);
     cost_current = J;
     cost(iter) = J;
     if abs(cost_current - cost_previous) < cost_threshold

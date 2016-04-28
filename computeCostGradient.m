@@ -22,9 +22,11 @@
 ## Author: juigilkishore <juigilkishore@juigilkishore-Studio-1555>
 ## Created: 2016-04-24
 
-function [cost, gradient] = computeCostGradient (y, X, theta, M)
-  hypothesis = sigmoid(X*theta);  # 1xM
-  cost = -1*mean(y.*log(hypothesis) + (1-y).*log(1 - hypothesis));  # 1x1
-  gradient = (1/M)*X'*(hypothesis - y);   # 1xN
+function [cost, gradient_regularized] = computeCostGradient (y, X, theta, M, lambda)
+  hypothesis = sigmoid(X*theta);  # Mx1
+  cost = -1*mean(y.*log(hypothesis) + (1-y).*log(1 - hypothesis)) + ...
+         (lambda/2)*mean(theta(2:end).*theta(2:end));  # 1x1
+  gradient = (1/M)*X'*(hypothesis - y);   # Nx1
+  gradient_regularized = gradient + [0; (lambda/M)*theta(2:end)];
 
 endfunction

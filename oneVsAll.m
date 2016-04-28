@@ -27,13 +27,14 @@ function [theta_all] = oneVsAll (y, X, M, N, LABELS)
   K = length(LABELS);
   theta_all = zeros(N, K);
   alpha = 1E-5;
-  numIterations = 750;
+  numIterations = 2000;
+  lambda = 100;   # Regularization parameter
   for k = 0:K-1
     fprintf("Evaluating the features for digit %d\n", k)
     fflush(stdout);
     theta_init = zeros(N, 1);
     y_k = y==k;
-    [theta_k, cost] = gradientDescent(y_k, X, M, theta_init, alpha, numIterations);
+    [theta_k, cost] = gradientDescent(y_k, X, M, theta_init, alpha, numIterations, lambda);
     theta_all(:, k+1) = theta_k;  # NxK
     
     plot(1:length(cost), cost, plot_code(k+1));
