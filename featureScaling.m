@@ -14,31 +14,22 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*- 
-## @deftypefn {Function File} {@var{retval} =} oneVsAll (@var{input1}, @var{input2})
+## @deftypefn {Function File} {@var{retval} =} featureScaling (@var{input1}, @var{input2})
 ##
 ## @seealso{}
 ## @end deftypefn
 
 ## Author: juigilkishore <juigilkishore@juigilkishore-Studio-1555>
-## Created: 2016-04-24
+## Created: 2016-04-28
 
-function [theta_all] = oneVsAll (y, X, M, N, LABELS)
-  plot_code = ['-+k', '-or', '-*g', '-.b', '-xm', 'k', 'r', 'g', 'b', 'm'];
-  K = length(LABELS);
-  theta_all = zeros(N, K);
-  alpha = 0.5;
-  numIterations = 1500;
-  lambda = 10;   # Regularization parameter
-  for k = 0:K-1
-    fprintf("Evaluating the features for digit %d\n", k)
-    fflush(stdout);
-    theta_init = zeros(N, 1);
-    y_k = y==k;
-    [theta_k, cost] = gradientDescent(y_k, X, M, theta_init, alpha, numIterations, lambda);
-    theta_all(:, k+1) = theta_k;  # NxK
-    
-    plot(1:length(cost), cost, plot_code(k+1));
-    axis tight; grid on; hold on;
-  end
+function [X] = featureScaling (X1)
+  M = size(X1)(1);
+  X1 = X1(:, 2:end);
+  mu_X1 = repmat(mean(X1), M, 1);
+  sigma_X1 = sqrt(mean((X1 - mu_X1).*(X1 - mu_X1)));
+  sigma_X1(find(sigma_X1 == 0)) = 1;
+  sigma_X1 = repmat(sigma_X1, M, 1);
+  X = (X1 - mu_X1)./sigma_X1;
+  X = [ones(M, 1) X];
 
-end
+endfunction

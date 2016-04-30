@@ -40,7 +40,9 @@ numFeatures = sizeFeatures(2);
 fprintf("Evaluate the features for every digit...\n")
 fflush(stdout);
 
-theta_optimal = oneVsAll(trainLabels, trainFeatures,...
+[trainFeatures_scaled] = featureScaling(trainFeatures);
+# trainFeatures_scaled = trainFeatures;
+theta_optimal = oneVsAll(trainLabels, trainFeatures_scaled,...
                          numInstances, numFeatures,...
                          LABELS);
                          
@@ -51,7 +53,7 @@ fflush(stdout);
 
 fprintf("Predict the training data based on the evaluated features...\n")
 fflush(stdout);
-predict_trainData = sigmoid(trainFeatures*theta_optimal);
+predict_trainData = sigmoid(trainFeatures_scaled*theta_optimal);
 [val, index] = max(predict_trainData');
 estimate = index - 1;
 
@@ -59,6 +61,7 @@ estimate = index - 1;
 error = length(find([estimate == trainLabels'] == 0))*(100/numInstances);
 fprintf("Error between predicted training data and available data = %f\n", error)
 fflush(stdout);
+csvwrite('error_percent_fS_L10.csv', error);
 
 
 ####################### TEST DATA ######################
@@ -73,12 +76,14 @@ testFeatures = [ones(numTestInstances, 1), testData];
 
 fprintf("Predict the test data based on the evaluated features...\n")
 fflush(stdout);
-predict_testData = sigmoid(testFeatures*theta_optimal);
+[testFeatures_scaled] = featureScaling(testFeatures);
+predict_testData = sigmoid(testFeatures_scaled*theta_optimal);
 [val, index] = max(predict_testData');
 test_estimate = index - 1;
 
 fprintf("Write the predicted digits to test_prediction.csv...\n")
 fflush(stdout);
-csvwrite('test_prediction.csv', test_estimate');
+out_contents = [[1:length(test_estimate)]' test_estimate'];
+csvwrite('test_prediction.csv', out_contents);
 fprintf("Wrote the predicted digits to test_prediction.csv\n")
 fflush(stdout);
